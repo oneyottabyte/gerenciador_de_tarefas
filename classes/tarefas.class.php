@@ -76,7 +76,7 @@ class Tarefas {
     }
 
     public function getAll(){
-        $query = "SELECT * FROM tarefas ORDER BY data_criacao ASC";
+        $query = "SELECT * FROM tarefas ORDER BY status ASC, data_criacao DESC";
         $sql = $this->conn->query($query);
         $result = $this->conn->fetchAll($sql);
         return $result;
@@ -97,7 +97,7 @@ class Tarefas {
     }
 
     public function concluir() {
-        $query = "UPDATE tarefas SET status = 'concluída' WHERE id = {$this->id}";
+        $query = "UPDATE tarefas SET status = 'Concluída' WHERE id = {$this->id}";
         $sql = $this->conn->query($query);
         if ($sql) {
             return "ok";

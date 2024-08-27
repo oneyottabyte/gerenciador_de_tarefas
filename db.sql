@@ -3,7 +3,7 @@ CREATE TABLE tarefas (
   titulo VARCHAR(255) NOT NULL,
   descricao TEXT,
   data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  status ENUM('pendente', 'concluída') DEFAULT 'pendente'
+  status ENUM('Pendente', 'Concluída') DEFAULT 'Pendente'
 );
 
 INSERT INTO tarefas (titulo, descricao) VALUES 
