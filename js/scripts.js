@@ -1,16 +1,15 @@
-$(document).ready(function() {
-    
+$(document).ready(function () {
+
     carregarTarefas();
 
-    $("#addTarefaForm").submit(function(e) {
+    $("#addTarefaForm").submit(function (e) {
         e.preventDefault();
         var formData = $(this).serialize();
-
         $.ajax({
             url: "control/insert.php",
             type: "POST",
             data: formData,
-            success: function(response) {
+            success: function (response) {
                 if (response === "ok") {
                     $("#addTarefaModal").modal("hide");
                     $("#addTarefaForm")[0].reset();
@@ -20,106 +19,104 @@ $(document).ready(function() {
                     exibirMensagem("Erro ao adicionar tarefa: " + response, "danger");
                 }
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 exibirMensagem("Erro ao processar a solicitação: " + error, "danger");
             }
         });
     });
 
-   
-    $(document).on("click", ".btn-editar", function() {
+
+    $(document).on("click", ".btn-editar", function () {
         var tarefaId = $(this).data("tarefa-id");
         $.ajax({
-            url: "control/edit.php", 
+            url: "control/getById.php",
             type: "POST",
-            data: {acao: "obterTarefa", tarefaId: tarefaId},
-            success: function(response) {
+            data: { id: tarefaId },
+            success: function (res) {
+                response = JSON.parse(res)
+                console.log(response)
                 if (response !== null) {
-                    
                     $("#tarefaId").val(response.id);
                     $("#tituloEdit").val(response.titulo);
                     $("#descricaoEdit").val(response.descricao);
-                    $("#dataLimiteEdit").val(response.dataLimite);
+                    $("#statusEdit").val(response.status);
                     $("#editTarefaModal").modal("show");
                 } else {
                     exibirMensagem("Tarefa não encontrada.", "danger");
                 }
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 exibirMensagem("Erro ao obter a tarefa: " + error, "danger");
             }
         });
     });
 
     // Salvar edição
-    $("#editTarefaForm").submit(function(e) {
+    $("#editTarefaForm").submit(function (e) {
         e.preventDefault();
         var formData = $(this).serialize();
-
+        console.log(this);
         $.ajax({
-            url: "control/edit.php", 
+            url: "control/edit.php",
             type: "POST",
             data: formData,
-            success: function(response) {
+            success: function (response) {
                 if (response === "ok") {
-                    
                     $("#editTarefaModal").modal("hide");
-                    carregarTarefas(); 
+                    carregarTarefas();
                     exibirMensagem("Tarefa editada com sucesso!", "success");
                 } else {
-                    
+
                     exibirMensagem("Erro ao editar tarefa: " + response, "danger");
                 }
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 exibirMensagem("Erro ao processar a solicitação: " + error, "danger");
             }
         });
     });
 
-    // Excluir Tarefa
-    $(document).on("click", ".btn-excluir", function() {
+    $(document).on("click", ".btn-excluir", function () {
         var tarefaId = $(this).data("tarefa-id");
         if (confirm("Tem certeza que deseja excluir esta tarefa?")) {
             $.ajax({
                 url: "control/delete.php",
                 type: "POST",
-                data: {acao: "excluirTarefa", tarefaId: tarefaId},
-                success: function(response) {
+                data: { id: tarefaId },
+                success: function (response) {
                     if (response === "ok") {
-                        
                         carregarTarefas();
                         exibirMensagem("Tarefa excluída com sucesso!", "success");
                     } else {
-                        
+
                         exibirMensagem("Erro ao excluir tarefa: " + response, "danger");
                     }
                 },
-                error: function(xhr, status, error) {
+                error: function (xhr, status, error) {
                     exibirMensagem("Erro ao processar a solicitação: " + error, "danger");
                 }
             });
         }
     });
 
-    
-    $(document).on("click", ".btn-concluir", function() {
+
+    $(document).on("click", ".btn-concluir", function () {
         var tarefaId = $(this).data("tarefa-id");
         $.ajax({
-            url: "control/concluir.php", 
+            url: "control/concluir.php",
             type: "POST",
-            data: {acao: "concluirTarefa", tarefaId: tarefaId},
-            success: function(response) {
+            data: { id: tarefaId },
+            success: function (response) {
                 if (response === "ok") {
-                    
+
                     carregarTarefas();
                     exibirMensagem("Tarefa marcada como concluída!", "success");
                 } else {
-                    
+
                     exibirMensagem("Erro ao concluir tarefa: " + response, "danger");
                 }
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 exibirMensagem("Erro ao processar a solicitação: " + error, "danger");
             }
         });
@@ -127,21 +124,23 @@ $(document).ready(function() {
 
     function carregarTarefas() {
         $.ajax({
-            url: "control/carregarTodas.php",
+            url: "control/getAll.php",
             type: "GET",
-            success: function(response) {
+            success: function (response) {
                 $("#listaTarefas tbody").empty();
                 if (response) {
-                    $.each(JSON.parse(response), function(index, tarefa) {
+                    $.each(JSON.parse(response), function (index, tarefa) {
                         var linha = `<tr>
                                         <td>${tarefa.titulo}</td>
                                         <td>${tarefa.descricao}</td>
-                                        <td>${tarefa.dataCriacao}</td>
+                                        <td>${tarefa.data_criacao}</td>
                                         <td>${tarefa.status}</td>
                                         <td class="text-center">
-                                            <button class="btn btn-warning btn-editar" data-tarefa-id="${tarefa.id}">Editar</button>
-                                            <button class="btn btn-danger btn-excluir" data-tarefa-id="${tarefa.id}">Excluir</button>
-                                            <button class="btn btn-success btn-concluir" data-tarefa-id="${tarefa.id}">Concluir</button>
+                                            <div class="btn-group" role="group" aria-label="Ações">
+                                                <button class="btn btn-warning btn-editar" data-tarefa-id="${tarefa.id}" title="Editar"><i class="fa-regular fa-pen-to-square"></i></button>
+                                                <button class="btn btn-danger btn-excluir" data-tarefa-id="${tarefa.id}" title="Excluir"><i class="fa-solid fa-trash"></i></button>
+                                                <button class="btn btn-success btn-concluir" data-tarefa-id="${tarefa.id}" title="Concluir"><i class="fa-regular fa-square-check"></i></i></button>
+                                            </div>
                                         </td>
                                     </tr>`;
                         $("#listaTarefas tbody").append(linha);
@@ -150,18 +149,24 @@ $(document).ready(function() {
                     $("#listaTarefas tbody").append('<tr><td colspan="5" class="text-center">Nenhuma tarefa encontrada</td></tr>');
                 }
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 exibirMensagem("Erro ao carregar as tarefas: " + error, "danger");
             }
         });
     }
 
     function exibirMensagem(mensagem, tipo) {
-        $("#mensagens").html(`<div class="alert alert-${tipo} alert-dismissible fade show" role="alert">
-                                    ${mensagem}
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">×</span>
-                                    </button>
-                                </div>`);
+        const alerta = $(`
+            <div class="alert alert-${tipo} alert-dismissible fade show" role="alert">
+                ${mensagem}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        `);
+
+        $('#mensagens').append(alerta);
+
+        setTimeout(() => {
+            alerta.alert('close');
+        }, 5000);
     }
 });

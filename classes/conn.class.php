@@ -5,7 +5,7 @@ class Conn
 
     private $host = 'localhost';
     private $user = 'root';
-    private $pass = 'kURz4pC9@s6zyiYk$SLp';
+    private $pass = 'root';
     private $banco = 'tarefas';
     private $result;
 

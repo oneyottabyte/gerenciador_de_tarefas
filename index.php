@@ -5,16 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gerenciador de Tarefas</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-        integrity="sha512-iecdLmaskl7CVkqk1Q27o+wG+UejAKWx/15WgXypKeThb+l/h/l/q/PFqdq+Pv/gynnA2V0NEcYY5NwcFjwk/kg=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/fontawesome/css/all.min.css"/>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
     <div class="container mt-5">
-        <div id="mensagens" class="mt-3"></div>
+        <div id="mensagens" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;"></div>
         <h1 class="text-center mb-4">Gerenciador de Tarefas</h1>
 
         <div class="row mb-4">
@@ -87,6 +85,7 @@
                 </div>
                 <form id="editTarefaForm">
                     <input type="hidden" id="tarefaId" name="tarefaId">
+                    <input type="hidden" id="statusEdit" name="statusEdit">
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="tituloEdit">Título:</label>
@@ -106,9 +105,8 @@
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap.min.js"></script>
     <script src="js/scripts.js"></script>
 </body>
 

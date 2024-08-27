@@ -1,7 +1,7 @@
 <?php
 require_once("../classes/tarefas.class.php");
 
-$user = new Tarefas;
+$tarefa = new Tarefas;
 
 $id = $_POST['id'];
 
